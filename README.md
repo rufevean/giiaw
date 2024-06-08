@@ -8,14 +8,14 @@ This book has the following chapters and we will go through them one by one .
 3  - Evaluation
 4  - Extending the interpreter
 
-The book also adds REPL to the interpreter . REPL stands for Read Evaluate Print Loop and its a simple interactive programming environment that takes user input, evaluates it, and returns the result to the user.
+The book also adds REPL to the interpreter. REPL stands for Read Evaluate Print Loop and it's a simple interactive programming environment that takes user input, evaluates it, and returns the result to the user.
 
-Lets Start with the first chapter which is Lexer or scanning .
+Let's Start with the first chapter which is Lexer or scanning.
 
 
 ## Lexer 
 
-The Lexer basically converts the code you write into tokens . Tokens are the smallest unit of a program that is meaningful to the programming language.
+The Lexer basically converts the code you write into tokens. Tokens are the smallest unit of a program that is meaningful to the programming language.
 
 here is an example token.
 
@@ -57,7 +57,7 @@ const (
 
 Here we have defined 3 tokens ILLEGAL , EOF and RETURN  , we will define more tokens as we go through the book .
 
-Lets start going through funcitons now
+Let's start going through functions now
 
 - New() : This function initializes the lexer and returns a pointer to the lexer . This is the starting point of where this all compiler magic starts. you first dump your code and then just experiment with the lexer and see what tokens it generates .
 
