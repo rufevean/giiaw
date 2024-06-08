@@ -77,6 +77,6 @@ Let's start going through functions now
 
 - skipWhitespace() : This function skips the whitespace characters in the input string . It is used to skip the whitespace characters so that we can read the next token .
 
-This is the basic overview of the lexer and the functions used in it . The Story gets interesting now as we dive into one of the most important part of not only an interpreter but also computer science which is Parsing .
+This is the basic overview of the lexer and the functions used in it . The Story gets interesting now as we dive into one of the most important parts of not only an interpreter but also computer science which is Parsing .
 
 
