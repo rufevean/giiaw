@@ -466,5 +466,139 @@ we will add the above statements into the New() method of the parser . This is b
 
 ```
 
-Lets next deal with precedence and associativity of the operators . 
+Lets deal with if statments now and then end with function literals and function calls .
+
+
+- parseIfExpression() : This method parses the if expression and returns the if expression node of the AST . It has following steps :
+
+```
+    expression := &ast.IfExpression{Token: p.curToken} // Create a new if expression node 
+
+    if !p.expectPeek(token.LPAREN) { // If the next token is not a left parenthesis 
+        return nil // Return nil 
+    }
+
+    p.nextToken() // Read the next token 
+
+    expression.Condition = p.parseExpression(LOWEST) // Parse the condition 
+
+    if !p.expectPeek(token.RPAREN) { // If the next token is not a right parenthesis 
+        return nil // Return nil 
+    }
+
+    if !p.expectPeek(token.LBRACE) { // If the next token is not a left brace 
+        return nil // Return nil 
+    }
+
+    expression.Consequence = p.parseBlockStatement() // Parse the consequence 
+
+    if p.peekTokenIs(token.ELSE) { // If the next token is ELSE 
+        p.nextToken() // Read the next token 
+
+        if !p.expectPeek(token.LBRACE) { // If the next token is not a left brace 
+            return nil // Return nil 
+        }
+
+        expression.Alternative = p.parseBlockStatement() // Parse the alternative 
+
+    }
+
+    return expression // Return the if expression 
+
+```
+
+Lets under the above method more deeply as it is a bit complex . The function basically parses the if expression . The if expression has a condition, a consequence and an alternative . The condition is the expression that is evaluated to a boolean value . The consequence is the block of statements that is executed if the condition is true . The alternative is the block of statements that is executed if the condition is false . The if expression is represented as follows :
+
+```
+    if (condition) {
+        consequence
+    } else {
+        alternative
+    }
+
+```
+So, after taking the input string, we first create a new if expression node . We then parse the condition which is the expression inside the parentheses . We then parse the consequence which is the block of statements inside the left brace . We then check if there is an alternative which is the else block . If there is an alternative, we parse the alternative which is the block of statements inside the else block . We then return the if expression node .  
+
+With that said , lets move to function literals and function calls .
+
+- parseFunctionLiteral() : This method parses the function literal and returns the function literal node of the AST . It has following steps :
+
+```
+    lit := &ast.FunctionLiteral{Token: p.curToken} // Create a new function literal node 
+
+    if !p.expectPeek(token.LPAREN) { // If the next token is not a left parenthesis 
+        return nil // Return nil 
+    }
+
+    lit.Parameters = p.parseFunctionParameters() // Parse the function parameters 
+
+    if !p.expectPeek(token.LBRACE) { // If the next token is not a left brace 
+        return nil // Return nil 
+    }
+
+    lit.Body = p.parseBlockStatement() // Parse the function body 
+
+    return lit // Return the function literal 
+
+```
+
+To understand this funciton, lets know how a function literal is represented in our language . A function literal is represented as follows :
+
+```
+    fn(x, y) {
+        x + y
+    }
+
+```
+
+A function literal has parameters and a body . The parameters are the identifiers inside the parentheses . The body is the block of statements inside the left brace . So, after taking the input string, we first create a new function literal node . We then parse the parameters which are the identifiers inside the parentheses . We then parse the body which is the block of statements inside the left brace . We then return the function literal node .
+
+Function calls are represented as follows :
+
+```
+    add(5, 5)
+
+```
+Its pretty simple compared to function literals . Lets see the function now .
+
+- parseCallExpression() : This method parses the call expression and returns the call expression node of the AST . It has following steps :
+
+```
+    exp := &ast.CallExpression{Token: p.curToken, Function: function} // Create a new call expression node 
+
+    exp.Arguments = p.parseExpressionList(token.RPAREN) // Parse the arguments 
+
+    return exp // Return the call expression 
+
+```
+
+
+Easy, it only has arguments and a function . We first create a new call expression node . We then parse the arguments which are the expressions inside the parentheses . We then return the call expression node . But we have to keep in mind that we have to add LPAREN to infixParseFns in the New() method of the parser . Because we have to parse the arguments inside the parentheses .
+
+with the parsing done, lets make changes to our repl and get the parser working .
+
+- We will add a new file repl.go in the main package . This file will contain the code for the REPL . The REPL is the interactive programming environment that takes user input, evaluates it, and returns the result to the user . The REPL has the following steps :
+
+```
+    l := lexer.New(input) // Create a new lexer with the input 
+    p := parser.New(l) // Create a new parser with the lexer 
+
+    program := p.ParseProgram() // Parse the program 
+
+    if len(p.Errors()) != 0 { // If there are errors 
+        printParserErrors(out, p.Errors()) // Print the errors 
+        continue // Continue to the next iteration 
+    }
+
+    evaluator.Eval(program, env) // Evaluate the program 
+
+    if len(p.Errors()) != 0 { // If there are errors 
+        printParserErrors(out, p.Errors()) // Print the errors 
+        continue // Continue to the next iteration 
+    }
+
+```
+
+Thats it, Its Evaluation time now . Lets move to the next chapter and understand how evaluation works in an interpreter .
+
 
